@@ -1,0 +1,8 @@
+# Jetbrains
+/.idea/
+
+# Composer
+/vendor/
+
+# PHPUnit
+/.phpunit.result.cache

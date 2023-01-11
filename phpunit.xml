@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true">
+  <testsuites>
+    <testsuite name="Default">
+      <directory suffix="Test.php">./Test/Unit/</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <ini name="display_errors" value="true"/>
+  </php>
+</phpunit>

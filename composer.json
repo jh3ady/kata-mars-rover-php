@@ -1,0 +1,30 @@
+{
+  "name": "jh3ady/kata-mars-rover-php",
+  "type": "project",
+  "license": "MIT",
+  "scripts": {
+    "test": "phpunit test/unit/"
+  },
+  "autoload": {
+    "psr-4": {
+      "Jh3ady\\Kata\\MarsRoverPhp\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Jh3ady\\Kata\\MarsRoverPhp\\Test\\Unit\\": "test/unit/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Jean-Denis VIDOT",
+      "email": "contact@jdevelop.io"
+    }
+  ],
+  "require": {
+    "php": "^8.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
+}
