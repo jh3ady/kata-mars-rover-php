@@ -27,4 +27,32 @@ final class Rover
     {
         return $this->direction;
     }
+
+    public function moveForward(): bool
+    {
+        $this->position = $this->position->moveForward($this->direction);
+
+        return true;
+    }
+
+    public function moveBackward(): bool
+    {
+        $this->position = $this->position->moveBackward($this->direction);
+
+        return true;
+    }
+
+    public function turnLeft(): bool
+    {
+        $this->direction = $this->direction->turnLeft();
+
+        return true;
+    }
+
+    public function turnRight(): bool
+    {
+        $this->direction = $this->direction->turnRight();
+
+        return true;
+    }
 }

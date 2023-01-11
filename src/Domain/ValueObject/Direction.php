@@ -15,4 +15,24 @@ enum Direction: string
     {
         return $this->value === $other->value;
     }
+
+    public function turnLeft(): self
+    {
+        return match ($this) {
+            self::North => self::West,
+            self::East => self::North,
+            self::South => self::East,
+            self::West => self::South
+        };
+    }
+
+    public function turnRight(): self
+    {
+        return match ($this) {
+            self::North => self::East,
+            self::East => self::South,
+            self::South => self::West,
+            self::West => self::North
+        };
+    }
 }

@@ -28,4 +28,24 @@ final class Position
     {
         return $this->x === $other->x && $this->y === $other->y;
     }
+
+    public function moveForward(Direction $direction): self
+    {
+        return match ($direction) {
+            Direction::North => self::from($this->x, $this->y + 1),
+            Direction::South => self::from($this->x, $this->y - 1),
+            Direction::East => self::from($this->x + 1, $this->y),
+            Direction::West => self::from($this->x - 1, $this->y)
+        };
+    }
+
+    public function moveBackward(Direction $direction): self
+    {
+        return match ($direction) {
+            Direction::North => self::from($this->x, $this->y - 1),
+            Direction::South => self::from($this->x, $this->y + 1),
+            Direction::East => self::from($this->x - 1, $this->y),
+            Direction::West => self::from($this->x + 1, $this->y)
+        };
+    }
 }
