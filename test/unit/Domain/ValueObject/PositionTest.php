@@ -10,12 +10,11 @@ use PHPUnit\Framework\TestCase;
 
 class PositionTest extends TestCase
 {
-    public function testCannotHaveNegativeXOrdinate(): void
+    public function testCanHaveNegativeXOrdinate(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('X ordinate must be greater than or equal to 0');
+        $position = Position::from(x: -1, y: 0);
 
-        Position::from(x: -1, y: 0);
+        $this->assertSame(-1, $position->x);
     }
 
     public function testCanHaveZeroXOrdinate(): void
@@ -32,12 +31,11 @@ class PositionTest extends TestCase
         $this->assertSame(1, $position->x);
     }
 
-    public function testCannotHaveNegativeYOrdinate(): void
+    public function testCanHaveNegativeYOrdinate(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Y ordinate must be greater than or equal to 0');
+        $position = Position::from(x: 0, y: -1);
 
-        Position::from(x: 0, y: -1);
+        $this->assertSame(-1, $position->y);
     }
 
     public function testCanHaveZeroYOrdinate(): void

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jh3ady\Kata\MarsRoverPhp\Application\Interactor;
 
+use Jh3ady\Kata\MarsRoverPhp\Domain\Entity\PlanetInterface;
 use Jh3ady\Kata\MarsRoverPhp\Domain\Entity\Rover;
 use Jh3ady\Kata\MarsRoverPhp\Domain\ValueObject\Position;
 use Jh3ady\Kata\MarsRoverPhp\Domain\ValueObject\Direction;
@@ -12,15 +13,15 @@ use RuntimeException;
 
 final class RoverHardware implements RoverDriverInterface
 {
-    const COMMAND_FORWARD = 'f';
-    const COMMAND_BACKWARD = 'b';
-    const COMMAND_TURN_LEFT = 'l';
-    const COMMAND_TURN_RIGHT = 'r';
+    private const COMMAND_FORWARD = 'f';
+    private const COMMAND_BACKWARD = 'b';
+    private const COMMAND_TURN_LEFT = 'l';
+    private const COMMAND_TURN_RIGHT = 'r';
     private ?Rover $rover = null;
 
-    public function initialize(Position $position, Direction $direction): bool
+    public function initialize(PlanetInterface $planet, Position $position, Direction $direction): bool
     {
-        $this->rover = Rover::initialize($position, $direction);
+        $this->rover = Rover::initialize($planet, $position, $direction);
 
         return true;
     }

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Jh3ady\Kata\MarsRoverPhp\Test\Unit\Application\Interactor;
 
 use Jh3ady\Kata\MarsRoverPhp\Application\Interactor\RoverHardware;
+use Jh3ady\Kata\MarsRoverPhp\Domain\Entity\Mars;
+use Jh3ady\Kata\MarsRoverPhp\Domain\Entity\Obstacle;
+use Jh3ady\Kata\MarsRoverPhp\Domain\Entity\PlanetInterface;
+use Jh3ady\Kata\MarsRoverPhp\Domain\ValueObject\Circle;
 use Jh3ady\Kata\MarsRoverPhp\Domain\ValueObject\Position;
 use Jh3ady\Kata\MarsRoverPhp\Domain\ValueObject\Direction;
 use PHPUnit\Framework\TestCase;
@@ -12,10 +16,15 @@ use RuntimeException;
 
 final class RoverHardwareTest extends TestCase
 {
+    private PlanetInterface $planet;
+
+    private RoverHardware $driver;
+
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->planet = new Mars(size: Circle::of(2));
         $this->driver = new RoverHardware();
     }
 
@@ -23,7 +32,7 @@ final class RoverHardwareTest extends TestCase
     {
         $position = Position::from(x: 0, y: 0);
         $direction = Direction::from('N');
-        $initialized = $this->driver->initialize($position, $direction);
+        $initialized = $this->driver->initialize($this->planet, $position, $direction);
 
         $this->assertTrue($initialized);
         $this->assertTrue($position->equals($this->driver->getPosition()));
@@ -50,7 +59,7 @@ final class RoverHardwareTest extends TestCase
     {
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute([]);
 
         $position = $this->driver->getPosition();
@@ -64,7 +73,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $expectedPosition = Position::from(x: 0, y: 1);
         $initialDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['f']);
 
         $position = $this->driver->getPosition();
@@ -78,7 +87,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $expectedPosition = Position::from(x: 1, y: 0);
         $initialDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['f']);
 
         $position = $this->driver->getPosition();
@@ -92,7 +101,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 1);
         $expectedPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['f']);
 
         $position = $this->driver->getPosition();
@@ -106,7 +115,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 1, y: 0);
         $expectedPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['f']);
 
         $position = $this->driver->getPosition();
@@ -120,7 +129,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 1);
         $expectedPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['b']);
 
         $position = $this->driver->getPosition();
@@ -134,7 +143,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 1, y: 0);
         $expectedPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['b']);
 
         $position = $this->driver->getPosition();
@@ -148,7 +157,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $expectedPosition = Position::from(x: 0, y: 1);
         $initialDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['b']);
 
         $position = $this->driver->getPosition();
@@ -162,7 +171,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $expectedPosition = Position::from(x: 1, y: 0);
         $initialDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['b']);
 
         $position = $this->driver->getPosition();
@@ -176,7 +185,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l']);
 
         $position = $this->driver->getPosition();
@@ -190,7 +199,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l']);
 
         $position = $this->driver->getPosition();
@@ -204,7 +213,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l']);
 
         $position = $this->driver->getPosition();
@@ -218,7 +227,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l']);
 
         $position = $this->driver->getPosition();
@@ -232,7 +241,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r']);
 
         $position = $this->driver->getPosition();
@@ -246,7 +255,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r']);
 
         $position = $this->driver->getPosition();
@@ -260,7 +269,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r']);
 
         $position = $this->driver->getPosition();
@@ -274,7 +283,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r']);
 
         $position = $this->driver->getPosition();
@@ -288,7 +297,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -302,7 +311,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -316,7 +325,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l', 'l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -330,7 +339,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -344,7 +353,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -358,7 +367,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l', 'l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -372,7 +381,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -386,7 +395,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -400,7 +409,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l', 'l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -414,7 +423,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -428,7 +437,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -442,7 +451,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'l', 'l', 'l']);
 
         $position = $this->driver->getPosition();
@@ -456,7 +465,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -470,7 +479,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -484,7 +493,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -498,7 +507,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -512,7 +521,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -526,7 +535,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -540,7 +549,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -554,7 +563,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -568,7 +577,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -582,7 +591,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -596,7 +605,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -610,7 +619,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'r', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -624,7 +633,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r']);
 
         $position = $this->driver->getPosition();
@@ -638,7 +647,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'l']);
 
         $position = $this->driver->getPosition();
@@ -652,7 +661,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r']);
 
         $position = $this->driver->getPosition();
@@ -666,7 +675,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'l']);
 
         $position = $this->driver->getPosition();
@@ -680,7 +689,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r']);
 
         $position = $this->driver->getPosition();
@@ -694,7 +703,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'l']);
 
         $position = $this->driver->getPosition();
@@ -708,7 +717,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r']);
 
         $position = $this->driver->getPosition();
@@ -722,7 +731,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'l']);
 
         $position = $this->driver->getPosition();
@@ -736,7 +745,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -750,7 +759,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -764,7 +773,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -778,7 +787,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r', 'r']);
 
         $position = $this->driver->getPosition();
@@ -792,7 +801,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r', 'l']);
 
         $position = $this->driver->getPosition();
@@ -806,7 +815,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('W');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r', 'l']);
 
         $position = $this->driver->getPosition();
@@ -820,7 +829,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r', 'l']);
 
         $position = $this->driver->getPosition();
@@ -834,7 +843,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('E');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'r', 'l']);
 
         $position = $this->driver->getPosition();
@@ -849,7 +858,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $expectedPosition = Position::from(x: 0, y: 1);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('N');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'f', 'r', 'f']);
 
         $position = $this->driver->getPosition();
@@ -864,7 +873,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $expectedPosition = Position::from(x: 0, y: 1);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['f', 'l', 'f']);
 
         $position = $this->driver->getPosition();
@@ -878,7 +887,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $initialPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('N');
         $expectedPosition = Position::from(x: 1, y: 1);
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'f', 'l', 'f']);
 
         $position = $this->driver->getPosition();
@@ -893,7 +902,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $expectedPosition = Position::from(x: 1, y: 1);
         $initialDirection = Direction::from('N');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['f', 'r', 'f']);
 
         $position = $this->driver->getPosition();
@@ -908,7 +917,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $expectedPosition = Position::from(x: 1, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['l', 'f', 'r', 'f']);
 
         $position = $this->driver->getPosition();
@@ -923,7 +932,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $expectedPosition = Position::from(x: 1, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('E');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['f', 'l', 'f']);
 
         $position = $this->driver->getPosition();
@@ -938,7 +947,7 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $expectedPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('S');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['r', 'f', 'l', 'f']);
 
         $position = $this->driver->getPosition();
@@ -953,12 +962,196 @@ public function testRoverShouldMoveForwardFromNorth(): void
         $expectedPosition = Position::from(x: 0, y: 0);
         $initialDirection = Direction::from('S');
         $expectedDirection = Direction::from('W');
-        $this->driver->initialize($initialPosition, $initialDirection);
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
         $this->driver->execute(['f', 'r', 'f']);
 
         $position = $this->driver->getPosition();
         $direction = $this->driver->getDirection();
         $this->assertTrue($position->equals($expectedPosition));
         $this->assertTrue($direction->equals($expectedDirection));
+    }
+
+    public function testRoverShouldBeWrappedToTopLeftCornerIfForwardedFromBottomLeftCorner(): void
+    {
+        $initialPosition = Position::from(x: 0, y: 0);
+        $expectedPosition = Position::from(x: 0, y: 1);
+        $initialDirection = Direction::from('S');
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($expectedPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldBeWrappedToBottomLeftCornerIfForwardedFromTopLeftCorner(): void
+    {
+        $initialPosition = Position::from(x: 0, y: 1);
+        $expectedPosition = Position::from(x: 0, y: 0);
+        $initialDirection = Direction::from('N');
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($expectedPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldBeWrappedToTopRightCornerIfForwardedFromBottomRightCorner(): void
+    {
+        $initialPosition = Position::from(x: 1, y: 0);
+        $expectedPosition = Position::from(x: 1, y: 1);
+        $initialDirection = Direction::from('S');
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($expectedPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldBeWrappedToBottomRightCornerIfForwardedFromTopRightCorner(): void
+    {
+        $initialPosition = Position::from(x: 1, y: 1);
+        $expectedPosition = Position::from(x: 1, y: 0);
+        $initialDirection = Direction::from('N');
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($expectedPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldBeWrappedToTopLeftCornerIfForwardedFromTopRightCorner(): void
+    {
+        $initialPosition = Position::from(x: 1, y: 1);
+        $expectedPosition = Position::from(x: 0, y: 1);
+        $initialDirection = Direction::from('E');
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($expectedPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldBeWrappedToTopRightCornerIfForwardedFromTopLeftCorner(): void
+    {
+        $initialPosition = Position::from(x: 0, y: 1);
+        $expectedPosition = Position::from(x: 1, y: 1);
+        $initialDirection = Direction::from('W');
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($expectedPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldBeWrappedToBottomLeftCornerIfForwardedFromBottomRightCorner(): void
+    {
+        $initialPosition = Position::from(x: 1, y: 0);
+        $expectedPosition = Position::from(x: 0, y: 0);
+        $initialDirection = Direction::from('E');
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($expectedPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldBeWrappedToBottomRightCornerIfForwardedFromBottomLeftCorner(): void
+    {
+        $initialPosition = Position::from(x: 0, y: 0);
+        $expectedPosition = Position::from(x: 1, y: 0);
+        $initialDirection = Direction::from('W');
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($expectedPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldNotBeAbleToMoveIfObstacleIsInFront(): void
+    {
+        $initialPosition = Position::from(x: 0, y: 0);
+        $initialDirection = Direction::from('N');
+        $this->planet->addActor(Obstacle::class, Position::from(x: 0, y: 1));
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($initialPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldNotBeAbleToMoveIfObstacleIsBehind(): void
+    {
+        $initialPosition = Position::from(x: 0, y: 0);
+        $initialDirection = Direction::from('S');
+        $this->planet->addActor(Obstacle::class, Position::from(x: 0, y: 1));
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($initialPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldNotBeAbleToMoveIfObstacleIsOnTheLeft(): void
+    {
+        $initialPosition = Position::from(x: 0, y: 0);
+        $initialDirection = Direction::from('W');
+        $this->planet->addActor(Obstacle::class, Position::from(x: 1, y: 0));
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($initialPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldNotBeAbleToMoveIfObstacleIsOnTheRight(): void
+    {
+        $initialPosition = Position::from(x: 0, y: 0);
+        $initialDirection = Direction::from('E');
+        $this->planet->addActor(Obstacle::class, Position::from(x: 1, y: 0));
+        $this->driver->initialize($this->planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($initialPosition));
+        $this->assertTrue($direction->equals($initialDirection));
+    }
+
+    public function testRoverShouldMoveButStoppedByAnObstacle(): void
+    {
+        $planet = new Mars(size: Circle::of(5));
+        $initialPosition = Position::from(x: 0, y: 0);
+        $expectedPosition = Position::from(x: 3, y: 1);
+        $initialDirection = Direction::from('N');
+        $planet->addActor(Obstacle::class, Position::from(x: 3, y: 2));
+        $this->driver->initialize($planet, $initialPosition, $initialDirection);
+        $this->driver->execute(['f', 'r', 'f', 'f', 'f', 'l', 'f']);
+
+        $position = $this->driver->getPosition();
+        $direction = $this->driver->getDirection();
+        $this->assertTrue($position->equals($expectedPosition));
+        $this->assertTrue($direction->equals($initialDirection));
     }
 }
