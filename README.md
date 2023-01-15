@@ -2,6 +2,28 @@
 
 A simple implementation of the Mars Rover Kata in PHP.
 
+## Installation
+
+### Docker
+
+```bash
+docker compose build
+```
+
+```bash
+docker compose run php composer run test
+```
+
+### Local
+
+```bash
+composer install
+```
+
+```bash
+composer run test
+```
+
 ## Your Task
 You’re part of the team that explores Mars by sending remotely controlled vehicles to the surface of the planet. Develop an API that translates the commands sent from earth to instructions that are understood by the rover.
 

@@ -9,6 +9,6 @@ max_line_length = 120
 tab_width = 4
 indent_size = 4
 
-[*.{json,xml}]
+[*.{json,xml,yml}]
 tab_width = 2
 indent_size = 2
